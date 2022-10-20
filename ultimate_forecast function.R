@@ -109,6 +109,12 @@ ultimate_forecast = function(df, h, eval_start, eval_end, target_var, type_estim
     # RF = randomForest(x = X_matrix, y = y, ntree = 500)
     # RF_forec[j] = predict(RF, newdata = df[tail(trainingSet_index_loop, 1), ])
     
+    # Mean Method
+    mean_forec[j] = mean(yt$y[trainingSet_index_loop[1]:tail(trainingSet_index_loop, 1)])
+    
+    # Naive Method (RW)
+    naive_forec[j] = tail(yt$y[trainingSet_index_loop[1]:tail(trainingSet_index_loop, 1)], 1)
+    
   }
   
   # Defining Forecast Errors --------------------------------------
@@ -139,6 +145,15 @@ ultimate_forecast = function(df, h, eval_start, eval_end, target_var, type_estim
   error_RF = y_true$y - RF_forec
   RMSE_RF = sqrt(mean(error_RF^2))
   MAE_RF = mean(abs(error_RF))
+  
+  # Basic models
+  error_mean = y_true$y - mean_forec
+  RMSE_mean = sqrt(mean(error_mean^2))
+  MAE_mean = mean(abs(error_mean))
+  
+  error_naive = y_true$y - naive_forec
+  RMSE_naive = sqrt(mean(error_naive^2))
+  MAE_naive = mean(abs(error_naive))
   
   # Return
   return(
